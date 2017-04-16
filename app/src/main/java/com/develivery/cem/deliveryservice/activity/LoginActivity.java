@@ -1,33 +1,29 @@
 package com.develivery.cem.deliveryservice.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.view.ActionBarPolicy;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.model.Staff;
 import com.develivery.cem.deliveryservice.request.Demand;
-
-import org.json.JSONObject;
 
 public class LoginActivity extends Activity {
 
     private EditText txtEmail;
     private EditText txtSifre;
     private Button btnGiris;
-
+    private Demand demand;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initialComponent();
-        final Demand demand = new Demand();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
 
 
         btnGiris.setOnClickListener(new View.OnClickListener() {
@@ -38,8 +34,11 @@ public class LoginActivity extends Activity {
                 Staff staff = new Staff();
                 staff.setEmail(email);
                 staff.setPassword(sifre);
-                demand.sendRequestForLogin(staff);
-
+                //VolleyLog.d("login-request", "");
+                //demand.sendRequestForLogin(staff, LoginActivity.this);
+                Intent ıntent = new Intent(getApplicationContext(),OrderActivity.class);
+                ıntent.putExtra("staffID", 1);
+                startActivity(ıntent);
             }
         });
     }
@@ -48,13 +47,10 @@ public class LoginActivity extends Activity {
         txtEmail = (EditText) findViewById(R.id.email);
         txtSifre = (EditText) findViewById(R.id.password);
         btnGiris = (Button) findViewById(R.id.giris);
+
+        //----
+
+        demand = new Demand();
     }
-
-    private void parseResponse(JSONObject s){
-
-    }
-
-
-
 
 }
