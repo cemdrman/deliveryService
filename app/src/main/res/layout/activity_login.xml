@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_horizontal_margin"
-    android:background="#052e49"
+    android:background="@drawable/login_selector"
     tools:context="com.develivery.cem.deliveryservice.activity.LoginActivity">
 
     <ImageView

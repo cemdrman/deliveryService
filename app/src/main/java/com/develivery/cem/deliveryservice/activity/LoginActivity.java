@@ -3,7 +3,6 @@ package com.develivery.cem.deliveryservice.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.view.ActionBarPolicy;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,9 +22,6 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         initialComponent();
 
-
-
-
         btnGiris.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,8 +30,18 @@ public class LoginActivity extends Activity {
                 Staff staff = new Staff();
                 staff.setEmail(email);
                 staff.setPassword(sifre);
-                //VolleyLog.d("login-request", "");
-                //demand.sendRequestForLogin(staff, LoginActivity.this);
+
+
+                /**
+                 * splah ekranda db boş mu? --> dolu olması token var demektir
+                 * db boş ise --> login ekranı --> bilgiler alınıp request atılır
+                 * db dolu ise --> order ekranı
+                 */
+
+
+                demand.sendRequestForLogin(staff);
+                //demand.getAllProducts(getApplicationContext());
+
                 Intent ıntent = new Intent(getApplicationContext(),OrderActivity.class);
                 ıntent.putExtra("staffID", 1);
                 startActivity(ıntent);
@@ -50,7 +56,7 @@ public class LoginActivity extends Activity {
 
         //----
 
-        demand = new Demand();
+        demand = new Demand(getApplicationContext());
     }
 
 }
