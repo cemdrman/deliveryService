@@ -34,5 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
+        android:textSize="25dp"
+        android:textColor="#fff"
+        android:background="@drawable/button_rounded_corners"
         android:text="Giriş Yap" />
 </RelativeLayout>
