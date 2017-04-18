@@ -2,9 +2,12 @@ package com.develivery.cem.deliveryservice.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.HashMap;
 
 /**
  * Created by cem on 17.04.2017.
@@ -13,6 +16,7 @@ public class TokenDB extends SQLiteOpenHelper {
 
     private static final int dbVersion = 1;
     private static final String dbName = "token_database";
+    private static final String tblName = "TOKEN";
 
     public TokenDB(Context context) {
         super(context, dbName, null, dbVersion);
@@ -21,7 +25,7 @@ public class TokenDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("db","creating db");
-        db.execSQL("CREATE TABLE TOKEN (id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT)");
+        db.execSQL("CREATE TABLE " + tblName +" (id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT)");
         Log.d("db","created db");
     }
 
@@ -30,15 +34,37 @@ public class TokenDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("token",token);
-        db.insert("TOKEN", null, values);
+        db.insert(tblName, null, values);
         db.close();
-        Log.d("saved-token","token saved");
+        Log.d("db","token saved");
     }
 
-    public void deleteToken(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete("TOKEN","id=1",null);
-        Log.d("db","deleting token");
+    public String getToken(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + tblName;
+        Cursor cursor = db.rawQuery(query,null);
+        String token = null;
+        HashMap<String,String> map = new HashMap<>();
+        if (cursor.moveToFirst()) {
+            token = cursor.getString(1);
+        }
+
+        return token;
+    }
+
+    public int getRowCount(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + tblName;
+        Cursor cursor = db.rawQuery(query,null);
+        int rowCount = cursor.getCount();
+        cursor.close();
+        return rowCount;
+    }
+
+    public void resetTable(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(tblName,null,null);
+        db.close();
     }
 
     @Override
