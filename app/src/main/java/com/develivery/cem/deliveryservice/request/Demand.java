@@ -40,7 +40,8 @@ public class Demand {
         this.context = context;
     }
 
-    public Staff sendRequestForLogin(final Staff staff){
+    public String sendRequestForLogin(final Staff staff){
+        final String[] cevap = new String[1];
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, RequestURL.baseUrl.concat(RequestURL.loginUrl),null, new Response.Listener<JSONObject>() {
             @Override
@@ -49,7 +50,7 @@ public class Demand {
                 try {
                     token = response.getString("token");
                     System.out.println("staff token:" + token);
-                    staff.setId(response.getInt("id"));
+                    cevap[0] = token.concat("/").concat(response.getString("id"));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -59,6 +60,8 @@ public class Demand {
             @Override
             public void onErrorResponse(VolleyError error) {
                 System.out.println(error);
+                cevap[0] = "hataliGiris";
+
             }
         }) {
             @Override
@@ -71,8 +74,8 @@ public class Demand {
             public byte[] getBody() {
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.accumulate("email","cemdrman@gmail.com");
-                    jsonObject.accumulate("password", "7b47997d");
+                    jsonObject.accumulate("email",staff.getEmail());
+                    jsonObject.accumulate("password", staff.getPassword());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -83,7 +86,7 @@ public class Demand {
         };
         requestQueue.add(stringRequest);
 
-        return staff;
+        return String.valueOf(cevap);
     }
 
     public ArrayList<Product> getAllProducts (){
