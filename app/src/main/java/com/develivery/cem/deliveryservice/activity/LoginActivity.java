@@ -2,7 +2,9 @@ package com.develivery.cem.deliveryservice.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,11 +18,12 @@ public class LoginActivity extends Activity {
     private EditText txtSifre;
     private Button btnGiris;
     private Demand demand;
+    private SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initialComponent();
+        initial();
 
         btnGiris.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,6 +33,7 @@ public class LoginActivity extends Activity {
                 Staff staff = new Staff();
                 staff.setEmail(email);
                 staff.setPassword(sifre);
+
 
 
                 /**
@@ -49,14 +53,14 @@ public class LoginActivity extends Activity {
         });
     }
 
-    private void initialComponent(){
+    private void initial(){
         txtEmail = (EditText) findViewById(R.id.email);
         txtSifre = (EditText) findViewById(R.id.password);
         btnGiris = (Button) findViewById(R.id.giris);
 
         //----
-
         demand = new Demand(getApplicationContext());
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
 }

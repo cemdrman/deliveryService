@@ -29,7 +29,7 @@ public class DeliveredFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListView listView = (ListView) view.findViewById(R.id.listViewTeslimEdilmis);
+        final ListView listView = (ListView) view.findViewById(R.id.listViewTeslimEdilmis);
         String[] dummyStrings = {"cem","enes","emir","serra"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, dummyStrings);
@@ -39,9 +39,11 @@ public class DeliveredFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "You clicked at position: " + (position + 1), Toast.LENGTH_SHORT).show();
-                /*Intent intent = new Intent(getActivity(), DesActivity.class);
-                intent.putExtra("string", "go to another Activity from ListView position: " + (position + 1));
-                startActivity(intent);*/
+                // ListView Clicked item value
+                String  selectedItemValue    = (String) listView.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+                intent.putExtra("test", selectedItemValue);
+                startActivity(intent);
             }
         });
     }
