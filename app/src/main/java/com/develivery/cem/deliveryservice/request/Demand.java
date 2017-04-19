@@ -1,11 +1,14 @@
 package com.develivery.cem.deliveryservice.request;
 
 import android.content.Context;
+import android.content.Intent;
 import android.preference.PreferenceActivity;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -13,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.develivery.cem.deliveryservice.activity.OrderActivity;
 import com.develivery.cem.deliveryservice.model.Order;
 import com.develivery.cem.deliveryservice.model.Product;
 import com.develivery.cem.deliveryservice.model.Staff;
@@ -38,55 +42,6 @@ public class Demand {
 
     public Demand(Context context) {
         this.context = context;
-    }
-
-    public String sendRequestForLogin(final Staff staff){
-        final String[] cevap = new String[1];
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, RequestURL.baseUrl.concat(RequestURL.loginUrl),null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println("response:" + response);
-                try {
-                    token = response.getString("token");
-                    System.out.println("staff token:" + token);
-                    cevap[0] = token.concat("/").concat(response.getString("id"));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.println(error);
-                cevap[0] = "hataliGiris";
-
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                return params;
-            }
-            @Override
-            public byte[] getBody() {
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.accumulate("email",staff.getEmail());
-                    jsonObject.accumulate("password", staff.getPassword());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                String string_json = jsonObject.toString();
-                System.out.println("request json body:" + string_json);
-                return string_json.getBytes();
-            }
-        };
-        requestQueue.add(stringRequest);
-
-        return String.valueOf(cevap);
     }
 
     public ArrayList<Product> getAllProducts (){
