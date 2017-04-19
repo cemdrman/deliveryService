@@ -5,12 +5,12 @@ package com.develivery.cem.deliveryservice.request;
  */
 public class RequestURL {
 
-    protected static final String baseUrl = "http://delivery.gudeno.me/api";
-    protected static final String loginUrl = "/login";
-    protected static final String productsUrl = "/products";
-    protected static final String productUrl = "/product";
-    protected static final String staffUrl = "/staff";
-    protected static final String ordersUrl = "/orders";
-    protected static final String orderUrl = "/order";
+    public static final String baseUrl = "http://delivery.gudeno.me/api";
+    public static final String loginUrl = "/login";
+    public static final String productsUrl = "/products";
+    public static final String productUrl = "/product";
+    public static final String staffUrl = "/staff";
+    public static final String ordersUrl = "/orders";
+    public static final String orderUrl = "/order";
 
 }
