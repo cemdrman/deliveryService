@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,10 +19,8 @@ import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Staff;
 import com.develivery.cem.deliveryservice.request.Demand;
 import com.develivery.cem.deliveryservice.request.RequestURL;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +41,10 @@ public class LoginActivity extends Activity {
         if (tokenDB.getRowCount() > 0) {
             System.out.println();
             Intent ıntent = new Intent(LoginActivity.this,OrderActivity.class );
+            System.out.println("token" + tokenDB.getToken());
+            System.out.println("staffID" + tokenDB.getID());
+            ıntent.putExtra("token",tokenDB.getToken());
+            ıntent.putExtra("staffID",tokenDB.getID());
             startActivity(ıntent);
         }else{
             btnGiris.setOnClickListener(new View.OnClickListener() {
@@ -76,8 +77,11 @@ public class LoginActivity extends Activity {
                     token = response.getString("token");
                     id = response.getInt("id");
                     System.out.println("staff token:" + token);
+                    TokenDB db = new TokenDB(getApplicationContext());
+                    db.saveToken(token,id);
                     Intent ıntent = new Intent(getApplicationContext(),OrderActivity.class);
                     ıntent.putExtra("staffID", id);
+                    ıntent.putExtra("token", token);
                     startActivity(ıntent);
 
                 } catch (JSONException e) {
@@ -120,7 +124,7 @@ public class LoginActivity extends Activity {
         btnGiris = (Button) findViewById(R.id.giris);
 
         //----
-        demand = new Demand(getApplicationContext());
+
         tokenDB = new TokenDB(getApplicationContext());
     }
 
