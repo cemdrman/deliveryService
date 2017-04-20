@@ -40,8 +40,9 @@ public class Demand {
     private String token;
     private Context context;
 
-    public Demand(Context context) {
+    public Demand(Context context, String token) {
         this.context = context;
+        this.token = token;
     }
 
     public ArrayList<Product> getAllProducts (){
@@ -90,12 +91,19 @@ public class Demand {
     }
 
     public Staff getStaffInfo(int id){
-        Staff staff = new Staff();
+        final Staff staff = new Staff();
 
         JsonObjectRequest staffRequest = new JsonObjectRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.staffUrl).concat("/" + id), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                try {
+                    staff.setId(response.getInt("id"));
+                    staff.setEmail(response.getString("email"));
+                    staff.setName(response.getString("name"));
+                    staff.setTotal_deliveries(response.getInt("total_deliveries"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -121,15 +129,24 @@ public class Demand {
         JsonObjectRequest objectRequest = new JsonObjectRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.ordersUrl), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
+                System.out.println(response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
             }
-        });
-
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization","Bearer "+token);
+                System.out.println(params.get("Authorization"));
+                return params;
+            }
+        };
+        Volley.newRequestQueue(context).add(objectRequest);
         return products;
     }
 
