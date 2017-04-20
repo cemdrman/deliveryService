@@ -25,15 +25,16 @@ public class TokenDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d("db","creating db");
-        db.execSQL("CREATE TABLE " + tblName +" (id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT)");
+        db.execSQL("CREATE TABLE " + tblName +" (id INTEGER PRIMARY KEY AUTOINCREMENT,token TEXT, staffID TEXT)");
         Log.d("db","created db");
     }
 
-    public void saveToken(String token){
+    public void saveToken(String token, int id){
         Log.d("db","saving token");
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("token",token);
+        values.put("staffID",id);
         db.insert(tblName, null, values);
         db.close();
         Log.d("db","token saved");
@@ -48,8 +49,19 @@ public class TokenDB extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             token = cursor.getString(1);
         }
-
         return token;
+    }
+
+    public int getID(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + tblName;
+        Cursor cursor = db.rawQuery(query,null);
+        String id = null;
+        HashMap<String,String> map = new HashMap<>();
+        if (cursor.moveToFirst()) {
+            id = cursor.getString(2);
+        }
+        return Integer.valueOf(id);
     }
 
     public int getRowCount(){
