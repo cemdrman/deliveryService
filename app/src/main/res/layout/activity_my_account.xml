@@ -8,7 +8,17 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
     android:orientation="vertical"
-    android:background="#052e49">
+    android:background="#333F54">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#052e49"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:title="HESABIM"
+        app:titleTextColor="@android:color/white" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

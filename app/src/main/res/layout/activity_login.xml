@@ -20,14 +20,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/password"
-        android:hint="e-mail"
+        android:hint="E-mail"
         android:inputType="textEmailAddress" />
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:hint="şifre"
+        android:hint="Şifre"
         android:inputType="textPassword" />
     <Button
         android:id="@+id/giris"
