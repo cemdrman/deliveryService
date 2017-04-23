@@ -17,7 +17,6 @@ import com.android.volley.toolbox.Volley;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Staff;
-import com.develivery.cem.deliveryservice.request.Demand;
 import com.develivery.cem.deliveryservice.request.RequestURL;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,10 +28,10 @@ public class LoginActivity extends Activity {
     private EditText txtEmail;
     private EditText txtSifre;
     private Button btnGiris;
-    private Demand demand;
     private TokenDB tokenDB;
     private String token;
     private int id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +40,8 @@ public class LoginActivity extends Activity {
         if (tokenDB.getRowCount() > 0) {
             System.out.println();
             Intent ıntent = new Intent(LoginActivity.this,OrderActivity.class );
-            System.out.println("token" + tokenDB.getToken());
-            System.out.println("staffID" + tokenDB.getID());
+            System.out.println("token:   " + tokenDB.getToken());
+            System.out.println("staffID: " + tokenDB.getID());
             ıntent.putExtra("token",tokenDB.getToken());
             ıntent.putExtra("staffID",tokenDB.getID());
             startActivity(ıntent);

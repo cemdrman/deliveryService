@@ -1,15 +1,5 @@
 package com.develivery.cem.deliveryservice.activity;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,12 +11,21 @@ import com.develivery.cem.deliveryservice.adapter.OrderAdapter;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Order;
 import com.develivery.cem.deliveryservice.request.RequestURL;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,55 +33,56 @@ import java.util.Map;
 /**
  * Created by cem on 17.04.2017.
  */
-public class ApprovedFragment extends Fragment {
+public class TakenOffFragment extends Fragment {
 
     private OrderAdapter adapter;
     private ListView listView;
     private TokenDB tokenDB;
-    private ArrayList<Order> orders;
 
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_approved, container, false);
+        return inflater.inflate(R.layout.fragment_taken_off, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listView = (ListView) view.findViewById(R.id.listViewOnaylanmis);
+        listView = (ListView) view.findViewById(R.id.listViewTakenOff);
+
         tokenDB = new TokenDB(getActivity());
         getAllOrders();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "You clicked at position: " + (position + 1), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("selectedOrder", orders.get(position));
-                startActivity(intent);
+                /*Intent intent = new Intent(getActivity(), DesActivity.class);
+                intent.putExtra("string", "go to another Activity from ListView position: " + (position + 1));
+                startActivity(intent);*/
             }
         });
     }
+
     public void getAllOrders(){
 
         JsonArrayRequest objectRequest = new JsonArrayRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.ordersUrl), null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 System.out.println(response.toString());
-                orders = parseJson(response);
-                ArrayList<Order> approvedOrders = new ArrayList<>();
+                ArrayList<Order> orders = parseJson(response);
+                ArrayList<Order> takenOffOrders = new ArrayList<>();
                 for (Order o : orders  ) {
                     System.out.println(o.getId()  + o.getStatus() + " " + o.getContact());
                 }
                 System.out.println("orders size:" + orders.size());
                 for (int i = 0; i < orders.size(); i++) {
-                    if (orders.get(i).getStatus().toString().equals(" APPROVED")) {
-                        approvedOrders.add(orders.get(i));
+                    if (orders.get(i).getStatus().toString().equals(" TAKEN_OFF")) {
+                        takenOffOrders.add(orders.get(i));
                         System.out.println("içerdeyim");
                     }
 
                 }
-                adapter = new OrderAdapter(getActivity(), approvedOrders);
+                adapter = new OrderAdapter(getActivity(), takenOffOrders);
                 listView.setAdapter(adapter);
             }
         }, new Response.ErrorListener() {
@@ -130,4 +130,5 @@ public class ApprovedFragment extends Fragment {
         }
         return orders;
     }
+
 }

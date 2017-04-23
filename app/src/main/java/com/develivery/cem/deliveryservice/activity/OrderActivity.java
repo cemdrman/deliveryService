@@ -2,6 +2,7 @@ package com.develivery.cem.deliveryservice.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.adapter.ViewPagerAdapter;
+import com.develivery.cem.deliveryservice.database.TokenDB;
 
 /**
  * Created by cem on 15.04.2017.
@@ -28,29 +30,24 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
+
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
-
         setSupportActionBar(toolbar);
 
-        //create default navigation drawer toggle
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        //setting Tab layout (number of Tabs = number of ViewPager pages)
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         for (int i = 0; i < 3; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(pageTitle[i]));
         }
 
-        //set gravity for tab bar
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        //handling navigation view item event
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_order);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -81,6 +78,12 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
     }
 
     @Override
+    protected void onDestroy() {
+        Process.killProcess(Process.myPid());
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -91,9 +94,14 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.fr3) {
             viewPager.setCurrentItem(2);
         }else if (id == R.id.close) {
-            //kapat
+            TokenDB tokenDB = new TokenDB(getApplicationContext());
+            tokenDB.resetTable();
+            finish();
         }else if(id == R.id.my_account){
-            startActivity(new Intent(OrderActivity.this,MyAccountActivity.class));
+            Intent ıntent = new Intent(OrderActivity.this,MyAccountActivity.class);
+            ıntent.putExtra("staffID",getIntent().getExtras().getInt("staffID"));
+            ıntent.putExtra("token",getIntent().getExtras().getString("token"));
+            startActivity(ıntent);
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
