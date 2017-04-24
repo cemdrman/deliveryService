@@ -1,21 +1,18 @@
 package com.develivery.cem.deliveryservice.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Process;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -25,22 +22,21 @@ import com.android.volley.toolbox.Volley;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Staff;
-import com.develivery.cem.deliveryservice.request.Demand;
 import com.develivery.cem.deliveryservice.request.RequestURL;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyAccountActivity extends AppCompatActivity{
+public class MyAccountActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener{
 
+    private DrawerLayout drawer;
     private TextView txtStaffName;
     private TextView txtStaffEmail;
     private TextView txtStaffOrderCount;
     private Button btnLogout;
     private Staff staff;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +63,18 @@ public class MyAccountActivity extends AppCompatActivity{
     }
 
     private void init(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawerLayoutAccount);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_for_account);
+        assert navigationView != null;
+        navigationView.setNavigationItemSelectedListener(this);
         txtStaffName = (TextView) findViewById(R.id.txtStaffName);
         txtStaffEmail = (TextView) findViewById(R.id.txtStaffEmail);
         txtStaffOrderCount = (TextView) findViewById(R.id.txtStaffOrderCount);
         btnLogout = (Button) findViewById(R.id.btnLogout);
-        //--
         staff = new Staff();
     }
 
@@ -106,4 +109,21 @@ public class MyAccountActivity extends AppCompatActivity{
         Volley.newRequestQueue(getApplicationContext()).add(staffRequest);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.close) {
+            TokenDB tokenDB = new TokenDB(getApplicationContext());
+            tokenDB.resetTable();
+            finish();
+        }else if(id == R.id.my_account){
+            Intent ıntent = new Intent(this, MyAccountActivity.class);
+            ıntent.putExtra("staffID",getIntent().getExtras().getInt("staffID"));
+            ıntent.putExtra("token",getIntent().getExtras().getString("token"));
+            startActivity(ıntent);
+        }
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
