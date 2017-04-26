@@ -27,6 +27,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:id="@+id/lytSiparisDurum">
@@ -39,47 +40,51 @@
                     android:id="@+id/txtSiparisDurum"/>
 
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:divider="#569fd7"
-                android:gravity="left"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="20dp"
-                    android:text="Planlanan Teslim Tarihi: "/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="20dp"
-                    android:text="20.06.2017"
-                    android:id="@+id/txtPlanlananTarih"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/activity_horizontal_margin"
-                android:gravity="left"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="20dp"
-                    android:text="Planlanan Teslim Saati: "/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#fff"
-                    android:textSize="20dp"
-                    android:text="20:45"
-                    android:id="@+id/txtPlanlananSaati"/>
-            </LinearLayout>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginLeft="@dimen/activity_horizontal_margin"
+               android:orientation="vertical">
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:divider="#569fd7"
+                   android:gravity="left"
+                   android:orientation="horizontal">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textColor="#fff"
+                       android:textSize="20dp"
+                       android:text="Planlanan Teslim Tarihi: "/>
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textColor="#fff"
+                       android:textSize="20dp"
+                       android:text="20.06.2017"
+                       android:id="@+id/txtPlanlananTarih"/>
+               </LinearLayout>
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:gravity="left"
+                   android:orientation="horizontal">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textColor="#fff"
+                       android:textSize="20dp"
+                       android:text="Planlanan Teslim Saati: "/>
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:textColor="#fff"
+                       android:textSize="20dp"
+                       android:text="20:45"
+                       android:id="@+id/txtPlanlananSaati"/>
+               </LinearLayout>
+           </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

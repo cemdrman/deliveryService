@@ -1,4 +1,4 @@
-package com.develivery.cem.deliveryservice.request;
+package com.develivery.cem.deliveryservice.utility;
 
 /**
  * Created by cem on 17.04.2017.
