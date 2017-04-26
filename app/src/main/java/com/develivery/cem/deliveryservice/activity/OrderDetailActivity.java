@@ -16,10 +16,13 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Order;
+import com.google.gson.Gson;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by cem on 18.04.2017.
@@ -46,14 +49,13 @@ public class OrderDetailActivity extends Activity implements NavigationView.OnNa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
         init();
-
-
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            Order order = bundle.getParcelable("selectedOrder");
+            Gson gson = new Gson();
+            Order order = gson.fromJson(bundle.getString("selectedOrder"), Order.class);
+            setOrderDetails(order);
             System.out.println("sttus: " + order.getStatus());
         }
-        //setOrderDetails(order);
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,11 +78,11 @@ public class OrderDetailActivity extends Activity implements NavigationView.OnNa
             txtSiparisDurum.setText("TESLİMAT ZAMANI AŞILDI");
         }
 
-       // txtPlanlananTarih.setText(order.getDelivery_date());
-       // txtPlanlananSaati.setText(order.getDelivered_at());
-        // txtUrun1Adi.setText(); product parse edilecek
-
-
+        Date deliveryDate = new Date(order.getDelivery_date());
+        Format dateFormat = new SimpleDateFormat("dd.MM.yyyy/hh:mm");
+        txtPlanlananTarih.setText(dateFormat.format(deliveryDate).split("/")[0]);
+        txtPlanlananSaati.setText(dateFormat.format(deliveryDate).split("/")[1]);
+        //txtUrun1Adi.setText(); product parse edilecek
 
     }
 
@@ -112,14 +114,15 @@ public class OrderDetailActivity extends Activity implements NavigationView.OnNa
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.close) {
+        if (id == R.id.orderActivity) {
+            Intent ıntent = new Intent(this,OrderActivity.class );
+            startActivity(ıntent);
+        }else if (id == R.id.closeApp) {
             TokenDB tokenDB = new TokenDB(getApplicationContext());
             tokenDB.resetTable();
             finish();
-        }else if(id == R.id.my_account){
+        }else if(id == R.id.myAccountActivity){
             Intent ıntent = new Intent(this, MyAccountActivity.class);
-            ıntent.putExtra("staffID",getIntent().getExtras().getInt("staffID"));
-            ıntent.putExtra("token",getIntent().getExtras().getString("token"));
             startActivity(ıntent);
         }
         drawer.closeDrawer(GravityCompat.START);

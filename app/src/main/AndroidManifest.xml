@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name=".activity.OrderActivity"
-            android:label="Siparişler">
+            android:label="SİPARİŞLER">
             <intent-filter>
                 <action android:name="android.intent.action.Default" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,13 +30,20 @@
         </activity>
         <activity
             android:name=".activity.MyAccountActivity"
-            android:label="@string/title_activity_my_account"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="HESABIM">
+            <intent-filter>
+                <action android:name="android.intent.action.Default" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity
             android:name=".activity.OrderDetailActivity"
-            android:label="@string/title_activity_my_account"
+            android:label="SİPARİŞ DETAY">
+            <intent-filter>
+                <action android:name="android.intent.action.Default" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>

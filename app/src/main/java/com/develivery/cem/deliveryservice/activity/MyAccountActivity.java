@@ -17,12 +17,12 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Staff;
-import com.develivery.cem.deliveryservice.request.RequestURL;
+import com.develivery.cem.deliveryservice.utility.RequestURL;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -37,13 +37,15 @@ public class MyAccountActivity extends Activity implements NavigationView.OnNavi
     private Button btnLogout;
     private Staff staff;
     private Toolbar toolbar;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
-        int id =  getIntent().getExtras().getInt("staffID");
-        String token = getIntent().getExtras().getString("token");
+        TokenDB tokenDB = new TokenDB(getApplicationContext());
+        String token = tokenDB.getToken();
+        int id =  tokenDB.getID();
         init();
         getAccountInfo(token,id);
         btnLogout.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +67,7 @@ public class MyAccountActivity extends Activity implements NavigationView.OnNavi
     private void init(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawerLayoutAccount);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_for_account);
@@ -80,13 +82,14 @@ public class MyAccountActivity extends Activity implements NavigationView.OnNavi
 
     private void getAccountInfo(final String token, int id){
 
-        JsonObjectRequest staffRequest = new JsonObjectRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.staffUrl).concat("/" + id), null, new Response.Listener<JSONObject>() {
+        StringRequest staffRequest = new StringRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.staffUrl).concat("/" + id), new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(String response) {
                 System.out.println(response);
                 try {
-                    txtStaffEmail.setText(response.getString("email"));
-                    txtStaffName.setText(response.getString("name"));
+                    JSONObject jsonObject = new JSONObject(response);
+                    txtStaffEmail.setText(jsonObject.getString("email"));
+                    txtStaffName.setText(jsonObject.getString("name"));
                     txtStaffOrderCount.setText(String.valueOf(staff.getTotal_deliveries()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -113,15 +116,13 @@ public class MyAccountActivity extends Activity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.close) {
+        if (id == R.id.orderActivity) {
+            Intent ıntent = new Intent(this,OrderActivity.class );
+            startActivity(ıntent);
+        }else if (id == R.id.closeApp) {
             TokenDB tokenDB = new TokenDB(getApplicationContext());
             tokenDB.resetTable();
             finish();
-        }else if(id == R.id.my_account){
-            Intent ıntent = new Intent(this, MyAccountActivity.class);
-            ıntent.putExtra("staffID",getIntent().getExtras().getInt("staffID"));
-            ıntent.putExtra("token",getIntent().getExtras().getString("token"));
-            startActivity(ıntent);
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

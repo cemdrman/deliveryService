@@ -9,7 +9,11 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.model.Order;
+
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by cem on 21.04.2017.
@@ -18,6 +22,7 @@ public class OrderAdapter extends BaseAdapter {
 
     private LayoutInflater ınflater;
     private ArrayList<Order> orders;
+    private Date deliveryDate;
 
     public OrderAdapter(Activity activity, ArrayList<Order> orders) {
         ınflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -46,12 +51,12 @@ public class OrderAdapter extends BaseAdapter {
         TextView orderNo = (TextView) satirView.findViewById(R.id.txtOrderNo);
         TextView orderDate = (TextView) satirView.findViewById(R.id.txtOrderDate);
         TextView orderHour = (TextView) satirView.findViewById(R.id.txtOrderHour);
-
         Order order = orders.get(position);
         orderNo.setText(String.valueOf(order.getId()));
-        orderDate.setText(String.valueOf(order.getDelivery_date()));
-        orderHour.setText(String.valueOf(order.getApproved_at()));
-
+        deliveryDate = new Date(order.getDelivery_date());
+        Format dateFormat = new SimpleDateFormat("dd.MM.yyyy/hh:mm");
+        orderDate.setText(dateFormat.format(deliveryDate).split("/")[0]);
+        orderHour.setText(dateFormat.format(deliveryDate).split("/")[1]);
         return satirView;
     }
 }

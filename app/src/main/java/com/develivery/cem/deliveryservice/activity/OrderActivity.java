@@ -93,14 +93,12 @@ public class OrderActivity extends AppCompatActivity implements NavigationView.O
             viewPager.setCurrentItem(1);
         } else if (id == R.id.fr3) {
             viewPager.setCurrentItem(2);
-        }else if (id == R.id.close) {
+        }else if (id == R.id.closeApp) {
             TokenDB tokenDB = new TokenDB(getApplicationContext());
             tokenDB.resetTable();
             finish();
-        }else if(id == R.id.my_account){
+        }else if(id == R.id.myAccountActivity){
             Intent ıntent = new Intent(OrderActivity.this,MyAccountActivity.class);
-            ıntent.putExtra("staffID",getIntent().getExtras().getInt("staffID"));
-            ıntent.putExtra("token",getIntent().getExtras().getString("token"));
             startActivity(ıntent);
         }
         drawer.closeDrawer(GravityCompat.START);

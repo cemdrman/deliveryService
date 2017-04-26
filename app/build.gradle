@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         applicationId "com.develivery.cem.deliveryservice"
@@ -24,7 +24,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
     compile 'com.android.support:design:24.0.0' //design support library
     compile 'com.android.support:appcompat-v7:24.0.0' //appcompat library (default)
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
 }

@@ -12,12 +12,12 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Staff;
-import com.develivery.cem.deliveryservice.request.RequestURL;
+import com.develivery.cem.deliveryservice.utility.RequestURL;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -65,24 +65,20 @@ public class LoginActivity extends Activity {
     }
 
     private void login(final Staff staff){
-
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, RequestURL.baseUrl.concat(RequestURL.loginUrl),null, new Response.Listener<JSONObject>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, RequestURL.baseUrl.concat(RequestURL.loginUrl), new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-                System.out.println("response:" + response);
-
+            public void onResponse(String response) {
                 try {
-                    token = response.getString("token");
-                    id = response.getInt("id");
-                    System.out.println("staff token:" + token);
+                    JSONObject jsonObject = new JSONObject(response);
+                    token = jsonObject.getString("token");
+                    id = jsonObject.getInt("id");
                     TokenDB db = new TokenDB(getApplicationContext());
                     db.saveToken(token,id);
                     Intent ıntent = new Intent(getApplicationContext(),OrderActivity.class);
                     ıntent.putExtra("staffID", id);
                     ıntent.putExtra("token", token);
                     startActivity(ıntent);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -121,10 +117,6 @@ public class LoginActivity extends Activity {
         txtEmail = (EditText) findViewById(R.id.email);
         txtSifre = (EditText) findViewById(R.id.password);
         btnGiris = (Button) findViewById(R.id.giris);
-
-        //----
-
         tokenDB = new TokenDB(getApplicationContext());
     }
-
 }

@@ -9,24 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.develivery.cem.deliveryservice.R;
 import com.develivery.cem.deliveryservice.adapter.OrderAdapter;
 import com.develivery.cem.deliveryservice.database.TokenDB;
 import com.develivery.cem.deliveryservice.model.Order;
-import com.develivery.cem.deliveryservice.request.RequestURL;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.Serializable;
-import java.security.Timestamp;
+import com.develivery.cem.deliveryservice.utility.JsonParse;
+import com.develivery.cem.deliveryservice.utility.RequestURL;
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +33,8 @@ public class ApprovedFragment extends Fragment {
 
     private OrderAdapter adapter;
     private ListView listView;
-    private TokenDB tokenDB;
     private ArrayList<Order> orders;
+    private TokenDB tokenDB;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,32 +50,25 @@ public class ApprovedFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "You clicked at position: " + (position + 1), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("selectedOrder", orders.get(position));
+                Order order = orders.get(position);
+                intent.putExtra("selectedOrder", new Gson().toJson(order));
                 startActivity(intent);
             }
         });
     }
-    public void getAllOrders(){
 
-        JsonArrayRequest objectRequest = new JsonArrayRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.ordersUrl), null, new Response.Listener<JSONArray>() {
+    public void getAllOrders(){
+        StringRequest objectRequest = new StringRequest(Request.Method.GET, RequestURL.baseUrl.concat(RequestURL.ordersUrl),new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONArray response) {
-                System.out.println(response.toString());
-                orders = parseJson(response);
+            public void onResponse(String response) {
                 ArrayList<Order> approvedOrders = new ArrayList<>();
-                for (Order o : orders  ) {
-                    System.out.println(o.getId()  + o.getStatus() + " " + o.getContact());
-                }
-                System.out.println("orders size:" + orders.size());
+                JsonParse jsonParse = new JsonParse();
+                orders = jsonParse.jsonParser(response);
                 for (int i = 0; i < orders.size(); i++) {
                     if (orders.get(i).getStatus().toString().equals(" APPROVED")) {
                         approvedOrders.add(orders.get(i));
-                        System.out.println("içerdeyim");
                     }
-
                 }
                 adapter = new OrderAdapter(getActivity(), approvedOrders);
                 listView.setAdapter(adapter);
@@ -100,34 +88,6 @@ public class ApprovedFragment extends Fragment {
             }
         };
         Volley.newRequestQueue(getActivity()).add(objectRequest);
-
     }
 
-    private ArrayList<Order> parseJson(JSONArray response){
-        ArrayList<Order> orders = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            Order order = new Order();
-            try {
-                JSONObject rootJsonObject = response.getJSONObject(i);
-                order.setId(rootJsonObject.getInt("id"));
-                JSONArray products = rootJsonObject.getJSONArray("products");//******
-                order.setDelivery_price((float) rootJsonObject.getDouble("delivery_price"));
-                order.setContact(rootJsonObject.getString("contact"));
-                order.setStatus(rootJsonObject.getString("status"));
-                order.setStaff_id(rootJsonObject.getInt("staff_id"));
-                /*order.setDelivery_date( rootJsonObject.getInt("delivery_date")); delivery date can be long!
-                order.setTaken_of_at((Timestamp) rootJsonObject.getClass("taken_off_at"));
-                order.setDelivered_at((Timestamp) rootJsonObject.getClass("delivered_at"));
-                order.setApproved_at((Timestamp) rootJsonObject.getClass("approved_at"));
-                order.setCreated_at((Timestamp) rootJsonObject.getClass("created_at"));
-                order.setUpdated_at((Timestamp) rootJsonObject.getClass("updated_at"));*/
-                order.setProduct_details(rootJsonObject.getJSONArray("product_details"));
-                orders.add(order);
-                System.out.println("parse edildi: " + order.getId());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return orders;
-    }
 }
